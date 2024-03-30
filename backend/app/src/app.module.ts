@@ -3,9 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MessageModule } from './message/message.module';
 import { TaskModule } from './task/task.module';
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
-  imports: [MessageModule, TaskModule],
+  imports: [MessageModule, TaskModule, MessagesModule],
   controllers: [AppController],
   providers: [AppService],
 })
