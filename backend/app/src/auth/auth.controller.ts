@@ -1,11 +1,16 @@
-import { Controller,Post,Get, Param } from '@nestjs/common';
+import { Controller,Post,Get, Param,Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  @Post()
-  createUser(){
-    return 
+  constructor(private authService: AuthService) {}
+
+  @Post('/register')
+  async register(@Body('email') email: string, @Body('password') password:string){
+    const user = await this.authService.createUser(email,password)
+
+    //オブジェクトを返す
+    return { user };
   }
 
   @Get('/:id')

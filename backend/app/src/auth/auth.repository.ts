@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
-class UserRepository{
+class AuthRepository{
   async createUser(email:string, password:string){
     const saltOrRounds = 10;
 
@@ -20,5 +20,8 @@ class UserRepository{
         salt,
       }
     })
+    return user;
   }
 }
+
+export default new AuthRepository();
