@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client';
-import bcrypt from 'bcrypt'; 
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -20,6 +20,7 @@ class AuthRepository{
         salt,
       }
     })
+    console.log(user)
     return user;
   }
 }
