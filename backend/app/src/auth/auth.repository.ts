@@ -1,5 +1,6 @@
 import {PrismaClient} from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { createCipheriv, randomBytes, scrypt } from 'crypto';
 
 const prisma = new PrismaClient();
 
