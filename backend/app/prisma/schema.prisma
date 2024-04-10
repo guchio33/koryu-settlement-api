@@ -17,3 +17,12 @@ model Book {
   updated_at    DateTime @updatedAt
   @@map("books")
 }
+
+model User{
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  updateAt        DateTime  @updatedAt
+  email           String    @unique
+  hashedPassword  String    
+  salt            String
+}
