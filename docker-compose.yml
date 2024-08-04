@@ -11,9 +11,10 @@ services:
       - "4000:3000"
       - "5555:5555"
     networks:
-      - app-network
-    
-  
+      - koryu-settlement-api_app-network
+    env_file:
+      - ./backend/app/.env
+
   db:
     platform: linux/x86_64
     image: mysql:8.0
@@ -29,7 +30,7 @@ services:
     ports:
       - 3306:3306
     networks:
-      - app-network  # 追加
+      - koryu-settlement-api_app-network
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -42,8 +43,8 @@ services:
     ports:
       - 8000:80
     networks:
-      - app-network  # 追加
+      - koryu-settlement-api_app-network
 
 networks:
-  app-network:
+  koryu-settlement-api_app-network:
     driver: bridge
