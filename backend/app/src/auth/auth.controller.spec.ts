@@ -17,7 +17,7 @@ describe('AuthController', () => {
   });
 
   describe('register', () => {
-    it('新規登録', async() => {
+    it('新規登録', async () => {
       const email = 'test@example.com';
       const password = 'password';
       const mockUser = {
@@ -26,17 +26,29 @@ describe('AuthController', () => {
         createdAt: new Date(),
         updateAt: new Date(), // 現在の日時を設定
         hashedPassword: 'hashedPassword',
-        salt: 'salt'
+        salt: 'salt',
       };
 
-      const createUserSpy = jest.spyOn(authService, 'createUser').mockResolvedValue(mockUser);
+      const createUserSpy = jest.spyOn(authService,'createUser').mockResolvedValue(mockUser);
 
       // register メソッドを呼び出し
-      const result =  controller.register(email, password);
+      const result = controller.register(email, password);
 
       // メソッドが正常に呼び出され、期待通りの結果が返されることを検証
       expect(createUserSpy).toHaveBeenCalledWith(email, password);
       expect(await result).toEqual({ user: mockUser });
+    });
+  });
+  describe('login', () => {
+    it('ログイン', async () => {
+      const email = 'test@example.com';
+      const password = 'password';
+      console.log(email, password);
+
+      //データベースとemailを照合
+      //saltを取得
+      //入力したpasswordとsaltを引っ付けハッシュ化
+      //比較しあっていた場合、認証完了
     });
   });
 
@@ -44,10 +56,8 @@ describe('AuthController', () => {
     it('should return a message with user ID', () => {
       const userId = 1;
       const expectedResult = 'あなたのuserIdは:1です。';
-      
       // getUserメソッドを呼び出し、結果を取得
       const result = controller.getUser(userId);
-  
       // 期待される結果と実際の結果を比較
       expect(result).toBe(expectedResult);
     });
