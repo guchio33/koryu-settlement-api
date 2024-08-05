@@ -9,13 +9,16 @@ services:
       - ./backend/app:/app
     ports:
       - "4000:3000"
-    # networks:
-    #   - app-network
-    
-  
+      - "5555:5555"
+    networks:
+      - koryu-settlement-api_app-network
+    env_file:
+      - ./backend/app/.env
+
   db:
     platform: linux/x86_64
-    image: mysql:5.7
+    image: mysql:8.0
+    container_name: nestjs-demo-db
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
@@ -26,11 +29,12 @@ services:
       - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - 3306:3306
-    # networks:
-    #   - app-network  # 追加
+    networks:
+      - koryu-settlement-api_app-network
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
+    container_name: nestjs-demo-phpmyadmin
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOSTS=${PMA_HOST}
@@ -38,7 +42,9 @@ services:
       - PMA_PASSWORD=${PMA_PASSWORD}
     ports:
       - 8000:80
-    # networks:
-    #   - app-network  # 追加
+    networks:
+      - koryu-settlement-api_app-network
 
-
+networks:
+  koryu-settlement-api_app-network:
+    driver: bridge

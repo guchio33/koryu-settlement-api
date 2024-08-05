@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
 }
 
 datasource db {
@@ -16,4 +17,13 @@ model Book {
   registered_at DateTime @default(now())
   updated_at    DateTime @updatedAt
   @@map("books")
+}
+
+model User{
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  updateAt        DateTime  @updatedAt
+  email           String    @unique
+  hashedPassword  String    
+  salt            String
 }
