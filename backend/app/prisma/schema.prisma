@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
 }
 
 datasource db {
@@ -12,8 +13,33 @@ datasource db {
 
 model Book {
   id            Int      @id @default(autoincrement())
-  title          String
+  title         String
   registered_at DateTime @default(now())
   updated_at    DateTime @updatedAt
   @@map("books")
+}
+
+model User{
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  updateAt        DateTime  @updatedAt
+  email           String    @unique
+  hashedPassword  String    
+  salt            String
+}
+
+model Item {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  price           Int
+  status          ItemStatus @default(ON_SALE)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// Prisma用のEnumを定義
+enum ItemStatus {
+  ON_SALE
+  SOLD_OUT
 }
