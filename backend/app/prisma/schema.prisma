@@ -13,7 +13,7 @@ datasource db {
 
 model Book {
   id            Int      @id @default(autoincrement())
-  title          String
+  title         String
   registered_at DateTime @default(now())
   updated_at    DateTime @updatedAt
   @@map("books")
@@ -26,4 +26,20 @@ model User{
   email           String    @unique
   hashedPassword  String    
   salt            String
+}
+
+model Item {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  price           Int
+  status          ItemStatus @default(ON_SALE)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// Prisma用のEnumを定義
+enum ItemStatus {
+  ON_SALE
+  SOLD_OUT
 }

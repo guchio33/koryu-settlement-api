@@ -1,43 +1,33 @@
-import { Injectable, Get, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Item } from './item.model';
-import { ItemStatus } from './item-status.model';
 import { CreateItemDto } from './dto/create_item_dto';
-import { v4 as uuid } from 'uuid';
+import { ItemsRepository } from './items.repository';
 @Injectable()
 export class ItemsService {
   private items: Item[] = [];
-  @Get()
-  findAll(): Item[] {
-    return this.items;
+  constructor(private readonly itemsRepository: ItemsRepository) {}
+
+  async findAll(): Promise<Item[]> {
+    return this.itemsRepository.findAll();
   }
 
-  findById(id: string): Item {
-    const found = this.items.find((item) => item.id === id);
-    if (!found) {
+  async findById(id: string): Promise<Item> {
+    const item = this.itemsRepository.findById(id);
+    if (!item) {
       throw new NotFoundException();
     }
-    return found;
-  }
-
-  create(createItemDto: CreateItemDto): Item {
-    const item: Item = {
-      id: uuid(),
-      ...createItemDto,
-      status: ItemStatus.ON_SALE,
-    };
-    // console.log('item', item);
-    this.items.push(item);
-    // console.log(this.items);
     return item;
   }
 
-  updateStatus(id: string): Item {
-    const item = this.findById(id);
-    item.status = ItemStatus.SOLD_OUT;
-    return item;
+  async create(createItemDto: CreateItemDto): Promise<Item> {
+    return this.itemsRepository.create(createItemDto);
   }
 
-  delete(id: string): void {
-    this.items = this.items.filter((item) => item.id !== id);
+  async updateStatus(id: string): Promise<Item> {
+    return this.itemsRepository.updateStatus(id);
+  }
+
+  async delete(id: string): Promise<void> {
+    this.itemsRepository.delete(id);
   }
 }
