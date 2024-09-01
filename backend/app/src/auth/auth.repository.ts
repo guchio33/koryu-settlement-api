@@ -28,9 +28,7 @@ export class AuthRepository {
 
   async login(credentialsDto: CredentialsDto) {
     const { email, password } = credentialsDto;
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await this.findOne(email);
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { id: user.id, email: user.email };
@@ -42,5 +40,11 @@ export class AuthRepository {
         'メールアドレスまたはパスワードを確認してください。',
       );
     }
+  }
+
+  async findOne(email: string) {
+    return await prisma.user.findUnique({
+      where: { email },
+    });
   }
 }
