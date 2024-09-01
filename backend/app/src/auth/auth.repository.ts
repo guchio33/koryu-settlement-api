@@ -1,33 +1,50 @@
+import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
-// import { createCipheriv, randomBytes, scrypt } from 'crypto';
+import { CreateUserDto } from './dto/create_user.dto';
+import { CredentialsDto } from './dto/credentials.dto';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { UnauthorizedException } from '@nestjs/common';
 
 const prisma = new PrismaClient();
 
-class AuthRepository {
-  async createUser(email: string, password: string) {
-    const saltOrRounds = 10;
+@Injectable()
+export class AuthRepository {
+  constructor(private readonly jwtService: JwtService) {}
 
-    //ソルトを作成
-    const salt = await bcrypt.genSalt(saltOrRounds);
+  async createUser(createUserDto: CreateUserDto) {
+    const { email, password } = createUserDto;
 
-    //パスワードをハッシュ化
+    const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await prisma.user.create({
+    return prisma.user.create({
       data: {
         email,
-        hashedPassword,
-        salt,
+        password: hashedPassword,
       },
     });
-    console.log(user);
-    return user;
   }
 
-  login(email: string, password: string) {
-    console.log(email, password);
+  async login(credentialsDto: CredentialsDto) {
+    const { email, password } = credentialsDto;
+    const user = await this.findOne(email);
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const payload = { id: user.id, email: user.email };
+      console.log(payload);
+      const accessToken = this.jwtService.sign(payload);
+      return { accessToken };
+    } else {
+      throw new UnauthorizedException(
+        'メールアドレスまたはパスワードを確認してください。',
+      );
+    }
+  }
+
+  async findOne(email: string) {
+    return await prisma.user.findUnique({
+      where: { email },
+    });
   }
 }
-
-export default new AuthRepository();

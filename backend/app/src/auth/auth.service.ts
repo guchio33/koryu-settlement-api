@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import AuthRepository from './auth.repository';
+import { AuthRepository } from './auth.repository';
+import { CreateUserDto } from './dto/create_user.dto';
+import { CredentialsDto } from './dto/credentials.dto';
 
 @Injectable()
 export class AuthService {
-  async createUser(email: string, password: string) {
-    const user = await AuthRepository.createUser(email, password);
-    return user;
+  constructor(private readonly authRepository: AuthRepository) {}
+
+  async createUser(createUserDto: CreateUserDto) {
+    return this.authRepository.createUser(createUserDto);
   }
 
-  async login(email: string, password: string) {
-    const user = await AuthRepository.createUser(email, password);
-    return user;
+  async login(credentialsDto: CredentialsDto) {
+    return this.authRepository.login(credentialsDto);
   }
 }
-
-export default new AuthService();

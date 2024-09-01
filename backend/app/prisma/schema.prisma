@@ -24,8 +24,7 @@ model User{
   createdAt       DateTime  @default(now())
   updateAt        DateTime  @updatedAt
   email           String    @unique
-  hashedPassword  String    
-  salt            String
+  password        String    
 }
 
 model Item {

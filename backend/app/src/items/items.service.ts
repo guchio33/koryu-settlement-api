@@ -4,7 +4,6 @@ import { CreateItemDto } from './dto/create_item_dto';
 import { ItemsRepository } from './items.repository';
 @Injectable()
 export class ItemsService {
-  private items: Item[] = [];
   constructor(private readonly itemsRepository: ItemsRepository) {}
 
   async findAll(): Promise<Item[]> {
